@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 
 DATA = {
     'omlet': {
@@ -18,6 +18,18 @@ DATA = {
     },
     # можете добавить свои рецепты ;)
 }
+
+
+def calc_recipe(request):
+    site_path = request.path_info.replace('/','')
+    quanty = int(request.GET.get('servings', 1))
+    context = {}
+    context['recipe'] = DATA[site_path]
+    for item in context['recipe']:
+        context['recipe'][item] *= quanty
+
+    return render(request, 'calculator/index.html', context)
+
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
 # Результат - render(request, 'calculator/index.html', context)
